@@ -1,0 +1,160 @@
+// =====================================================
+// app.jsx — Component logic (for reference / explanation)
+// The actual running app is bundled inside index.html.
+// This file shows the same code in clean, readable form.
+// =====================================================
+
+const { useState, useEffect } = React;
+
+// -----------------------------------------------------
+// 1. Starting data — a single array, like the PDF notes say:
+//    "Profile cards generated from a single array of data."
+// -----------------------------------------------------
+const initialProfiles = [
+  {
+    id: 1,
+    name: "Ammara",
+    bio: "Frontend Dev Intern, learning React one Hook at a time.",
+    avatar: "https://i.pravatar.cc/150?img=47",
+    isFollowed: false,
+  },
+  {
+    id: 2,
+    name: "Sara",
+    bio: "Backend Dev Intern, loves clean APIs.",
+    avatar: "https://i.pravatar.cc/150?img=32",
+    isFollowed: true,
+  },
+  {
+    id: 3,
+    name: "Bilal",
+    bio: "UI/UX enthusiast and coffee addict.",
+    avatar: "https://i.pravatar.cc/150?img=12",
+    isFollowed: false,
+  },
+  {
+    id: 4,
+    name: "Hina",
+    bio: "Full-stack intern exploring Node and React.",
+    avatar: "https://i.pravatar.cc/150?img=5",
+    isFollowed: false,
+  },
+];
+
+// -----------------------------------------------------
+// 2. ProfileCard — Child Component (receives PROPS only)
+//    Just like the PDF example: WelcomeCard(props)
+//    This component never changes its own props directly.
+// -----------------------------------------------------
+function ProfileCard(props) {
+  const { name, bio, avatar, isFollowed, onToggleFollow } = props;
+
+  return (
+    <div className="profile-card">
+      <img src={avatar} alt={name} />
+      <h3>{name}</h3>
+      <p className="bio">{bio}</p>
+      <button
+        className={"follow-btn " + (isFollowed ? "following" : "not-following")}
+        onClick={onToggleFollow}
+      >
+        {isFollowed ? "Following ✓" : "Follow +"}
+      </button>
+    </div>
+  );
+}
+
+// -----------------------------------------------------
+// 3. App — Parent Component (owns the STATE)
+//    Holds: profiles list, theme, search text
+// -----------------------------------------------------
+function App() {
+  // STATE #1: list of profiles (with follow status inside each object)
+  const [profiles, setProfiles] = useState(initialProfiles);
+
+  // STATE #2: dark/light theme switch
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // STATE #3 (bonus): search text for filtering by name
+  const [searchText, setSearchText] = useState("");
+
+  // ---- Update follow/unfollow status for ONE profile ----
+  function handleToggleFollow(id) {
+    // never mutate state directly — build a new array with setProfiles
+    setProfiles(
+      profiles.map((profile) =>
+        profile.id === id
+          ? { ...profile, isFollowed: !profile.isFollowed }
+          : profile
+      )
+    );
+  }
+
+  // ---- Toggle theme globally ----
+  function handleThemeToggle() {
+    setIsDarkMode(!isDarkMode);
+  }
+
+  // (Bonus) useEffect — logs follow changes to console whenever
+  // the profiles state changes, as required by the task.
+  useEffect(() => {
+    const followedNames = profiles
+      .filter((p) => p.isFollowed)
+      .map((p) => p.name);
+    console.log("Currently following:", followedNames);
+  }, [profiles]);
+
+  // (Bonus) filter profiles by search text (case-insensitive)
+  const filteredProfiles = profiles.filter((profile) =>
+    profile.name.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  return (
+    <div data-theme={isDarkMode ? "dark" : "light"}>
+      <div className="app-container">
+        <header className="app-header">
+          <div>
+            <h1>Dynamic Profile Card App</h1>
+            <p>Ammara | MAY26-FE30-55 | Appverse Technologies</p>
+          </div>
+          <button className="theme-toggle-btn" onClick={handleThemeToggle}>
+            {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+          </button>
+        </header>
+
+        <input
+          className="search-bar"
+          type="text"
+          placeholder="Search users by name..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+
+        {filteredProfiles.length > 0 ? (
+          <div className="card-grid">
+            {filteredProfiles.map((profile) => (
+              // PROPS passed down here — name, bio, avatar, isFollowed
+              <ProfileCard
+                key={profile.id}
+                name={profile.name}
+                bio={profile.bio}
+                avatar={profile.avatar}
+                isFollowed={profile.isFollowed}
+                onToggleFollow={() => handleToggleFollow(profile.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="empty-state">No users match "{searchText}"</p>
+        )}
+
+        <footer className="app-footer">
+          Built with React Props &amp; State — Phase 2 Advanced Task
+        </footer>
+      </div>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);
