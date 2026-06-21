@@ -1,9 +1,195 @@
-// =====================================================
-// app.jsx — Component logic (for reference / explanation)
-// The actual running app is bundled inside index.html.
-// This file shows the same code in clean, readable form.
-// =====================================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dynamic Profile Card App | Ammara</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<!--
+  These 3 lines load React, ReactDOM, and Babel from the internet.
+  React + ReactDOM = the React library itself.
+  Babel = converts the JSX syntax below into plain JavaScript the browser understands.
+  (Requires an internet connection to run, since these are not stored in this file.)
+-->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card-bg: #ffffff;
+    --text: #1c1f26;
+    --subtext: #5b6270;
+    --accent: #4f46e5;
+    --accent-text: #ffffff;
+    --border: #e3e6ec;
+  }
+
+  [data-theme="dark"] {
+    --bg: #14161c;
+    --card-bg: #1f2229;
+    --text: #f1f2f6;
+    --subtext: #a3a8b4;
+    --accent: #818cf8;
+    --accent-text: #14161c;
+    --border: #2c2f38;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.25s ease, color 0.25s ease;
+    min-height: 100vh;
+  }
+
+  .app-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  header.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  header.app-header h1 {
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  header.app-header p {
+    margin: 4px 0 0;
+    color: var(--subtext);
+    font-size: 0.85rem;
+  }
+
+  .theme-toggle-btn {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.15s ease;
+  }
+  .theme-toggle-btn:hover { transform: scale(1.04); }
+
+  .search-bar {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    font-size: 0.9rem;
+    margin-bottom: 22px;
+    outline: none;
+  }
+  .search-bar:focus { border-color: var(--accent); }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .profile-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .profile-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  }
+
+  .profile-card img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    margin-bottom: 10px;
+    object-fit: cover;
+  }
+
+  .profile-card h3 {
+    margin: 4px 0 2px;
+    font-size: 1rem;
+  }
+
+  .profile-card .bio {
+    color: var(--subtext);
+    font-size: 0.8rem;
+    margin: 0 0 14px;
+    min-height: 32px;
+  }
+
+  .follow-btn {
+    border: none;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.15s ease;
+  }
+  .follow-btn:hover { opacity: 0.85; }
+
+  .follow-btn.following {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+
+  .follow-btn.not-following {
+    background: var(--accent);
+    color: var(--accent-text);
+  }
+
+  .empty-state {
+    text-align: center;
+    color: var(--subtext);
+    margin-top: 40px;
+    font-size: 0.9rem;
+  }
+
+  footer.app-footer {
+    text-align: center;
+    color: var(--subtext);
+    font-size: 0.75rem;
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script>
+  // Configure Babel to use the classic JSX transform (React.createElement)
+  // instead of the newer automatic runtime, which requires ES modules.
+  Babel.registerPreset("react-classic", {
+    presets: [[Babel.availablePresets["react"], { runtime: "classic" }]],
+  });
+</script>
+<script type="text/babel" data-presets="react-classic">
 const { useState, useEffect } = React;
 
 // -----------------------------------------------------
@@ -158,3 +344,7 @@ function App() {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
+</script>
+
+</body>
+</html>
