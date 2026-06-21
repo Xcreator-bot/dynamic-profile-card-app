@@ -2,7 +2,7 @@
 
 A small React app for managing a list of user profiles — follow/unfollow users, search by name, and toggle between light and dark themes. Built to practice core React fundamentals: **props** for passing data down, and **state** for managing data that changes over time.
 
-🔗 **[Live Demo](#)** ← replace this with your GitHub Pages link once it's live
+🔗 **[Live Demo](https://xcreator-bot.github.io/dynamic-profile-card-app/)** 
 
 ![App Screenshot](./assets/screenshot.png)
 
